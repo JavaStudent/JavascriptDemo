@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //添加
+            $("#add").on("click",function(){
+                var $info = $("#info").val();
+                var $price = $("#price").val();
+                var $count = $("#count").val();
+                var $addNode = $(
+                    "<tr><td><input type='checkbox' name='goods' /></td>"+
+                    "<td>"+$info+"</td>"+
+                    "<td>"+$price+"</td>"+
+                    "<td><input type='button' value='-' class='jian' /><input type='text' class='count' size='3' value='"+$count+"' /><input type='button' value='+' class='jia' /></td>"+
+                    "<td><a href='#' class='delOne'>删除</a></td></tr>");
+                $("tbody").append($addNode);
+                var $goods = $("tbody .count");
+                for(var i = 0; i < $goods.length; i ++)
+                {
+                    if($($goods[i]).val() <= 1)
+                    {
+                        $($goods[i]).prev().prop("disabled",true);
+                    }
+                 }
+            })
+            //全选
+            $("#all").on("click",function(){
+                if($(this).prop("checked"))
+                {
+                    $("tbody input[type=checkbox]").prop("checked",true);
+                }
+                else
+                {
+                    $("tbody input[type=checkbox]").prop("checked",false);
+
+                }
+            })
+            //删除选中的
+            $("#del").on("click",function(){
+                 var $goods = $("tbody input[type=checkbox]");
+                 for(var i = 0; i < $goods.length; i ++)
+                 {
+                    if($($goods[i]).prop("checked"))
+                    {
+                        $($goods[i]).parent().parent().remove();
+                    }
+                 }
+            })
+            //删除单个的
+            $("tbody").on("click",".delOne",function(){
+                $(this).parent().parent().remove();
+            })
+
+            //增加数量
+            $("tbody").on("click",".jia",function(){
+                var $oldNum = $(this).prev().val();
+                $(this).prev().val(parseInt($oldNum) + 1);
+                if($(this).prev().val() > 1)
+                {
+                    $(this).prev().prev().prop("disabled",false);
+                }
+            })
+            //减少数量
+            $("tbody").on("click",".jian",function(){
+                var $oldNum = $(this).next().val();
+                $(this).next().val(parseInt($oldNum) - 1);
+                if($(this).next().val() <= 1)
+                {
+                    $(this).prop("disabled",true);
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <table border="1">
+        <thead>
+            <th><input type="checkbox" id="all" name="all"/>全选</th>
+            <th>名称</th>
+            <th>价格</th>
+            <th>数量</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>    
+    <a href="#" id="add">添加</a>
+    <a href="#" id="del">删除</a>
+    <div>
+        名称：<input type="text" name="info" id="info" value="商品"/><br/>
+        价格：<input type="text" name="price" id="price" value="10" /><br/>
+        数量：<input type="text" name="count" id="count" value="1" /><br/>
+    </div>
+</body>
+</html>

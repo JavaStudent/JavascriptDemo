@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+           var ulWidth = $("ul li").width() * $("ul li").length;
+           var firstImgSrc = $("ul li:eq(0) img").attr("src");
+           var $firstImgNode = $("<img src='"+firstImgSrc+"' width='805' />");
+           $("#big").append($firstImgNode);
+           $("ul li:eq(0) img").addClass("border-color");
+           $("#small ul").width(ulWidth);
+           $("#next").bind("click",function() {
+                var move = $("ul li").width() * 4;
+                console.log(move);
+                if($("ul").position().left - move  > -ulWidth)
+                {
+                    $("#small ul").animate({"left": $("ul").position().left - move}, "slow");
+                    // $("#small ul").css("left", $("ul").position().left - move);
+                }
+                return false;
+           })
+           $("#prev").bind("click",function() {
+                var move = $("ul li").width() * 4;
+                if($("ul").position().left < 0)
+                {
+                    $("#small ul").animate({"left": $("ul").position().left + move}, "slow");
+                    // $("#small ul").css("left", $("ul").position().left + move);
+                }
+                return false;
+           })
+           $("#small ul li img").bind("click",function(){
+                // console.log($(this).attr("src"));
+                $(this).addClass("border-color");
+                $(this).parent().siblings().children("img").removeClass("border-color");
+                var $new = $(this).attr("src");
+                $("#big img").fadeOut("fast","linear", function(){
+                    // console.log($(this).attr("src"));
+                    $("#big img").attr("src",$new).fadeIn("fast");
+                });
+           })
+        })
+    </script>
+</head>
+<style type="text/css">
+    * { margin:0; padding:0; }
+    #grallery {
+        width: 800px;
+        border: 1px solid black;
+        margin: 0 auto;
+        overflow:hidden;
+    }
+    #small {
+        width: 800px;
+        overflow: hidden;
+        height: 116px;
+        position: relative;
+    }
+    #small ul {
+        position: absolute;
+    }
+    #small ul li {
+        float: left;
+        list-style-type: none;
+    }
+    #small img {
+        opacity: 0.5;
+        cursor: pointer;
+    }
+    #contraller {
+        width: 800px;
+        font-size: 30px;
+        text-align: center;
+    }
+    #contraller a {
+        color: black;
+        text-decoration: none;
+    }
+    #small .border-color {
+        opacity: 1;
+    }
+</style>
+<body>
+    <div id="grallery">
+        <div id="big"></div>
+        <div id="small">
+            <ul>
+                <li><img src="images/pic_1.jpg" width="200" /></li>
+                <li><img src="images/pic_2.jpg" width="200" /></li>
+                <li><img src="images/pic_3.jpg" width="200" /></li>
+                <li><img src="images/pic_4.jpg" width="200" /></li>
+                <li><img src="images/pic_5.jpg" width="200" /></li>
+                <li><img src="images/pic_6.jpg" width="200" /></li>
+                <li><img src="images/pic_7.jpg" width="200" /></li>
+                <li><img src="images/pic_8.jpg" width="200" /></li>
+                <li><img src="images/pic_5.jpg" width="200" /></li>
+                <li><img src="images/pic_1.jpg" width="200" /></li>
+                <li><img src="images/pic_2.jpg" width="200" /></li>
+                <li><img src="images/pic_8.jpg" width="200" /></li>
+            </ul>
+            
+        </div>
+        <div id="contraller">
+            <a href="#" id="prev">&lt;&lt;Prev</a>
+            <a href="#" id="next">Next&gt;&gt;</a>
+        </div>
+    </div>
+</body>
+</html>

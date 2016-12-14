@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+           $("h2").hover(function(){
+            $(this).addClass("hover");
+           },function(){
+            $(this).removeClass("hover");
+           })
+           $("h2").bind("click",function(){
+                
+                if($(this).next().attr("class") == "active")
+                {
+                    $(this).children().text("+").removeClass("active");
+                    $(this).removeClass("active");
+                    $(this).next().removeClass("active");
+                    $(this).next().slideUp();
+                }else{
+                    $(this).children().text("-").addClass("active");
+                    $(this).addClass("active");
+                    $(this).next().addClass("active");
+                    $(this).next().slideDown();
+                }
+                
+           })
+
+        })
+    </script>
+    <style type="text/css">
+        h2, div {
+            width: 300px;
+            margin: 0 auto;
+        }
+        h2 {
+            padding-left: 20px;
+            cursor: pointer;
+        }
+            
+        h2 span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align:center;
+            border:1px solid #000;
+            background: #ccc;
+            color: #333;
+            border-radius: 3px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        div {
+            display: none;
+        }
+        .hover {
+            background-color: #aaeecc;
+        }
+        h2.active {
+            background-color: #aaeecc;
+            border:1px solid #ccc;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+        div.active {
+            border:1px solid #ccc;
+            border-top: 0px;
+            padding-left: 20px;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+        span.active {
+            color:#fff;
+        }
+    </style>
+</head>
+<body>
+    <h2><span>+</span>问题一</h2>
+    <div>解答：问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案问题一答案</div>
+    <h2><span>+</span>问题二</h2>
+    <div>解答：问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案问题二答案</div>
+    <h2><span>+</span>问题三</h2>
+    <div>解答：问题三答案问题三答案问题三答案问题三答案问题三答案问题三答案</div>
+</body>
+</html>
