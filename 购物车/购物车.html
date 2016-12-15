@@ -49,10 +49,21 @@
                         $($goods[i]).parent().parent().remove();
                     }
                  }
+                 // console.log($("tbody tr").size());
+                 //取消全选
+                 if($("tbody tr").size() == 0)
+                 {
+                    $("#all").prop("checked",false);
+                 }
             })
             //删除单个的
             $("tbody").on("click",".delOne",function(){
                 $(this).parent().parent().remove();
+                //取消全选
+                if($("tbody tr").size() == 0)
+                {
+                    $("#all").prop("checked",false);
+                }
             })
 
             //增加数量
@@ -71,6 +82,18 @@
                 if($(this).next().val() <= 1)
                 {
                     $(this).prop("disabled",true);
+                }
+            })
+            //取消选择商品取消全选状态
+            $("tbody").on("click","[name=goods]",function(){
+                var goods = $("[name=goods]");
+                for(var i = 0; i < goods.size(); i ++)
+                {
+                    if(!$(goods[i]).prop("checked"))
+                    {
+                        $("#all").prop("checked",false);
+                        break;
+                    }
                 }
             })
         })
