@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>前端代码在线运行</title>
+	<link rel="stylesheet" href="css/codemirror.css">
+	<script type="text/javascript" src="js/codemirror.js"></script>
+	<script type="text/javascript" src="js/xml.js"></script>
+	<style type="text/css">
+		/**{
+			margin:0;
+			padding:0;
+		}*/
+		div#content {
+			border: 1px solid black;
+		}
+		div#title h1{
+			float: left;
+			width: 50%;
+			text-align: center;
+		}
+		footer {
+			text-align: center;
+		}
+		iframe {
+			width: 45%;
+			height: 600px;
+			float: right;
+			/*box-shadow: 1px 1px;*/
+		}
+		.CodeMirror {
+			width: 45%;
+			height: 600px;
+			float: left;
+			/*box-shadow: 1px 1px;*/
+		}
+		a {
+			display: inline-block;
+		    text-decoration: none;
+		    background-color: #EFEFEF;
+		    line-height: 600px;
+		    width: 10%;
+		    font-size: 23px;
+		    text-align: center;
+		}
+		a span {
+		    display: inline-block;
+		    width: 0px;
+		    height: 0px;
+		    vertical-align: middle;
+		    text-indent: 50px;
+		    overflow: hidden;
+		    border-left: 100px solid #4CAF50;
+		    border-bottom: 50px solid transparent;
+		    border-top: 50px solid transparent;
+		}
+	</style>
+</head>
+<body>
+	<div id="content">
+		<textarea id="code">
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<h1>Hello World!</h1>	
+	</body>
+</html>
+		</textarea>
+		<iframe id="show" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+		<a id="run" href="javascript:runCode();" title="运行(Run)"><span>Run</span></a>
+	</div>
+	<div id="title">
+		<h1>代码区</h1>
+		<h1>效果区</h1>
+	</div>
+	<footer>
+		&copy&nbsp;2017&nbsp;Wei
+	</footer>
+</body>
+<script type="text/javascript">
+	var code = document.getElementById('code');
+	var show = document.getElementById('show');
+	var run = document.getElementById('run');
+
+	var editor = CodeMirror.fromTextArea(code, {
+		mode: "text/html",
+		lineNumbers: true,
+		lineWrapping: true,
+	});
+
+	run.onmouseover = function(){
+		run.style.background = "#4CAF50";
+		run.firstChild.style.borderLeftColor ="#EFEFEF";
+	}
+	run.onmouseout = function(){
+		run.style.background = "#EFEFEF";
+		run.firstChild.style.borderLeftColor ="#4CAF50";
+	}
+
+	function runCode()
+	{
+		show.contentWindow.document.open();
+		show.contentWindow.document.write(editor.getValue());
+		show.contentWindow.document.close();
+	}
+	
+
+</script>
+</html>

@@ -14,7 +14,7 @@
                 var $addNode = $(
                     "<tr><td><input type='checkbox' name='goods' /></td>"+
                     "<td>"+$info+"</td>"+
-                    "<td>"+$price+"</td>"+
+                    "<td class='price'>"+$price+"</td>"+
                     "<td><input type='button' value='-' class='jian' /><input type='text' class='count' size='3' value='"+$count+"' /><input type='button' value='+' class='jia' /></td>"+
                     "<td><a href='#' class='delOne'>删除</a></td></tr>");
                 $("tbody").append($addNode);
@@ -26,6 +26,7 @@
                         $($goods[i]).prev().prop("disabled",true);
                     }
                  }
+                 count();
             })
             //全选
             $("#all").on("click",function(){
@@ -55,6 +56,7 @@
                  {
                     $("#all").prop("checked",false);
                  }
+                 count();
             })
             //删除单个的
             $("tbody").on("click",".delOne",function(){
@@ -64,6 +66,7 @@
                 {
                     $("#all").prop("checked",false);
                 }
+                count();
             })
 
             //增加数量
@@ -74,6 +77,7 @@
                 {
                     $(this).prev().prev().prop("disabled",false);
                 }
+                count();
             })
             //减少数量
             $("tbody").on("click",".jian",function(){
@@ -83,6 +87,7 @@
                 {
                     $(this).prop("disabled",true);
                 }
+                count();
             })
             //取消选择商品取消全选状态
             $("tbody").on("click","[name=goods]",function(){
@@ -97,6 +102,19 @@
                 }
             })
         })
+        function count() {
+            var trSize = $("tbody tr");
+            var sum = 0;
+            for (var i = 0; i < trSize.size(); i ++)
+            {
+                var tr = $("tbody tr")[i];
+                var price = $(tr).children(".price").text();
+                var count = $(tr).children("td").children(".count").val();
+                // console.log($($(".count")[i]).val());
+                sum = sum + (price * count);
+            }
+            $(".sum").html(sum);
+        }
     </script>
 </head>
 <body>
@@ -111,7 +129,10 @@
         <tbody>
 
         </tbody>
-    </table>    
+        <tfoot>
+            <tr><td colspan="5" align="right"><span>总价:<span class="sum">0</span></span></td></tr>
+        </tfoot>
+    </table>  
     <a href="#" id="add">添加</a>
     <a href="#" id="del">删除</a>
     <div>
