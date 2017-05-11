@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>snake</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding: 0;
+		}
+		#box {
+			width: 500px;
+			height: 500px;
+			position: relative;
+			border: 10px solid #CDC3BA;
+			background-color: #F9F9EF;
+		}
+		.snake {
+			background-color: #ECC400;
+			display: inline-block;
+			position: absolute;
+		}
+		#apple {
+			background-color: #FF4500;
+			display: inline-block;
+			position: absolute;
+			border-radius: 10px;
+		}
+		.scorePanel {
+			position: absolute;
+			top: 10px;
+			right: 100px;
+		}
+		.main {
+			width: 800px;
+			margin: 0 auto;
+			position: relative;
+		}
+		#score {
+			font-size:24px;
+			font-weight: bolder;
+		}
+		.showScore {
+			position: absolute;
+		    left: 50%;
+		    top: 50%;
+		    margin-left: -100px;
+		    margin-top: -100px;
+		    text-align: center;
+		    font-size: 14px;
+		    width: 200px;
+		    color:#7A766D;
+		}
+		.showScore>div{
+			background: #ED995B;
+		    color: #fff;
+		    border-radius: 5px;
+		    margin-top: 30px;
+		    height: 50px;
+		    font-size: 18px;
+		    padding: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div id="box"></div>
+		<div class="scorePanel">得分：<span id="score">0</span><br/><br/>方向控制：上下左右键<br/>游戏开始：空格键</div>
+	</div>
+</body>
+<script src="jquery-1.10.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var pos = {x:0,y:0}; //蛇坐标对象
+	var w = 500, h = 500; //游戏范围
+	var s = 10; //位移
+	var snake = []; 
+	var ax = 0, ay = 0; //苹果坐标
+	var key = 3; //判断 左:1|上:2|右:3|下:4
+	var sl = 1; //蛇的初始长度
+	var isEat = true; //判断是否吃掉苹果
+	var score = 0; //分数
+	var snakeInterval; //定时器
+
+	//初始
+	function init()
+	{
+		for(var i = 0; i < sl; i ++)
+		{
+			pos = {x:i*s,y:100}
+			snake.push(pos);
+		}
+		snake.reverse();
+	}
+
+	//移动
+	function move()
+	{
+		if(key == 1 || key == 3)
+		{
+			var newPos = {x:snake[0].x+s, y:snake[0].y}
+			snake.unshift(newPos);
+			snake.pop();
+
+			for(var i = 0; i < snake.length; i ++)
+			{
+				var snakeBlock = $("<div class='snake'></div>");
+				snakeBlock.css({"left":(snake[i].x)+"px","top":(snake[i].y)+"px",
+					"width":Math.abs(s)+"px","height":Math.abs(s)+"px"});
+				if(i == 0)
+				{
+					snakeBlock.css({"background-color":"#26BC65","z-index":"1"});
+					if(key == 3)
+						snakeBlock.css({"border-top-right-radius":"10px","border-bottom-right-radius":"10px"});
+					if(key == 1)
+						snakeBlock.css({"border-top-left-radius":"10px","border-bottom-left-radius":"10px"});
+				}
+				$("#box").append(snakeBlock);
+			}
+		}else if(key == 2 || key == 4)
+		{
+			var newPos = {x:snake[0].x, y:snake[0].y+s}
+			snake.unshift(newPos);
+			snake.pop();
+			
+			for(var i = 0; i < snake.length; i ++)
+			{
+				var snakeBlock = $("<div class='snake'></div>");
+				snakeBlock.css({"left":(snake[i].x)+"px","top":(snake[i].y)+"px",
+					"width":Math.abs(s)+"px","height":Math.abs(s)+"px"});
+				if(i == 0)
+				{
+					snakeBlock.css({"background-color":"#26BC65","z-index":"1"});
+					if(key == 4)
+						snakeBlock.css({"border-bottom-left-radius":"10px","border-bottom-right-radius":"10px"});
+					if(key == 2)
+						snakeBlock.css({"border-top-left-radius":"10px","border-top-right-radius":"10px"});
+				}
+				$("#box").append(snakeBlock);
+			}
+		}
+	}
+
+	//生成苹果
+	function apple()
+	{
+		if(isEat)
+		{
+			do{
+				ax = Math.floor(Math.random() * 500);
+			}while(ax % 10 != 0);
+			do{
+				ay = Math.floor(Math.random() * 500);
+			}while(ay % 10 != 0);
+		}
+
+		var appleBlock = $("<div id='apple' class='block'></div>");
+		appleBlock.css({"left":ax+"px","top":ay+"px",
+			"width":Math.abs(s)+"px","height":Math.abs(s)+"px"});
+		$("#box").append(appleBlock);
+		isEat = false;
+	}
+
+	//吃苹果
+	function eat()
+	{
+		if(snake[0].x == ax && snake[0].y == ay)
+		{
+			$("#apple").remove();
+			isEat = true;
+			pos = {x:snake[snake.length-1].x + s, y:snake[snake.length-1].y + s}
+			snake.push(pos);
+			score += 100;
+		}
+	}
+
+	//碰撞检测
+	function check()
+	{
+		//检测碰撞自己
+		for(var i = 1; i < snake.length; i ++)
+		{
+			if(snake[0].x == snake[i].x && snake[0].y == snake[i].y)
+			{
+				clearInterval(snakeInterval);
+				showScore();
+				score = 0;
+			}
+		}
+
+		//检测碰撞墙壁
+		if(snake[0].x < 0 || snake[0].y < 0 || snake[0].x > 500 - s || snake[0].y > 500 - s)
+		{
+			clearInterval(snakeInterval);
+			showScore();
+			score = 0;
+		}
+		
+	}
+
+	//更新分数
+	function updateScore()
+	{
+		$("#score").text(score);
+	}
+
+	//显示分数
+	function showScore()
+	{
+		var show = "<div class='showScore'><h1>Game Over</h1><div>YOUR SCORE<br/>"+score+"</div></div>";
+		$("#box").append(show);
+	}
+
+	//开始游戏
+	function start()
+	{
+		$("#box").empty();
+		apple();
+		move();
+		check();
+		eat();
+		updateScore();
+	}
+
+	$(document).keydown(function(e){
+
+		//检测是否和移动方向相反的按键
+		if(e.keyCode == "37" && key == 3)
+		{
+			return;
+		}
+		if(e.keyCode == "38" && key == 4)
+		{
+			return;
+		}
+		if(e.keyCode == "39" && key == 1)
+		{
+			return;
+		}
+		if(e.keyCode == "40" && key == 2)
+		{
+			return;
+		}
+
+		if(e.keyCode == "37")
+		{
+			s = -Math.abs(s);
+			key = 1;
+		}else if(e.keyCode == "38")
+		{	
+			s = -Math.abs(s);
+			key = 2;
+		}else if(e.keyCode == "39")
+		{
+			s = Math.abs(s);
+			key = 3;
+		}else if(e.keyCode == "40")
+		{
+			s = Math.abs(s);
+			key = 4;
+		}else if(e.keyCode == "32")
+		{
+			sl = 3;
+			s = Math.abs(s);
+			snake.splice(0,snake.length);
+			init();
+			clearInterval(snakeInterval);
+			snakeInterval = setInterval("start()", 100);
+		}
+	})
+		
+</script>
+</html>
